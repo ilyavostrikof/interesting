@@ -1,0 +1,15 @@
+typedef QVector<quint32> Datagram;
+
+template <typename ... Args> //C++17 (fold expression)
+Datagram makeDatagram(Args ... args)
+{
+    Datagram result;
+
+    using expander = quint32[]; //C++11
+    
+    // В выражении ( x=x+11 , x+y ) первое значение ч перед запятой возвращает всегда пустое значение, а следом за ним выоплняется второе выражение - так тут работает запятая
+    (void) expander { 0U, ( (void) result.append(args), 0U ) ... }; 
+
+    //таким образом в result записывается переменное число аргументов, переданных в функцию makeDatagram
+    return result;
+}
